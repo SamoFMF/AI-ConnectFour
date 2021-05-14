@@ -31,6 +31,9 @@ class ConnectFour:
 
         # Stejemo stevilo odigranih potez
         self.stevilo_potez = 0
+
+        # Zgodovina potez
+        self.zgodovina = []
     
     def kopija(self):
         G = ConnectFour(self.na_potezi)
@@ -129,6 +132,7 @@ class ConnectFour:
         # Odigramo potezo
         self.board[p][j] = self.na_potezi
         self.stevilo_potez += 1
+        self.zgodovina.append(p)
 
         # Preverimo, ce je igre konec
         zmagovalec, stirka = self.stanje_po_potezi(p)
@@ -141,7 +145,19 @@ class ConnectFour:
             self.na_potezi = None
             return zmagovalec, stirka
     
-    def odstrani_potezo(self, p, check=False):
+    def razveljavi_potezo(self):
+        '''Razveljavi zadnjo potezo, ki je bila opravljena.'''
+        p = self.zgodovina.pop() # Iz zgodovine vzamemo zadnjo potezo in igralca
+
+        j = self.vrstice[p] # Dobimo vrstico
+        self.vrstice[p] -= 1
+
+        self.na_potezi = self.board[p][j] # Popravimo igralca, ki je na potezi
+
+        self.board[p][j] = PRAZNO # Odstranimo krogec
+        self.stevilo_potez -= 1
+    
+    def odstrani_potezo(self, p, check=False): # TODO - ni dokoncana?
         '''Odstrani potezo p, ce je veljavna, sicer ne naredi nic.
         V primeru, da je check=False, ne preverimo, ce je poteza veljavna.'''
         if check and self.vrstice[p] == 0:
